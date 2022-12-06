@@ -14,7 +14,7 @@ volume = cast(interface, POINTER(IAudioEndpointVolume))
 volRange = volume.GetVolumeRange()
 
 # using hand detector
-detector = htm.handDetector(detectionCon=0.7)
+detector = htm.handDetector(detectConf=0.8)
 
 # params
 widthCam, heightCam = 640, 480
@@ -35,7 +35,8 @@ print("press 'q' to quit")
 while True:
     success, img = cap.read()
     img = detector.findHands(img) # detect 21 key point of each hand
-    landMarkList = detector.findPosition(img, draw = False)
+    detector.draw_position = False
+    landMarkList = detector.findPosition(img)
     
     # we only need landmark of number 4 and 8(4 for thumb, 8 for index_finger_tip)
     if len(landMarkList) != 0:
@@ -65,16 +66,16 @@ while True:
             cv2.circle(img,(centX,centY),15,(0,255,0),cv2.FILLED)
 
     # plot the volume bar
-    cv2.rectangle(img, (50,barY2), (85,barY1), (0,0,255), 4) 
+    cv2.rectangle(img, (50,barY2), (85,barY1), (0,0,255), 3) 
     cv2.rectangle(img, (50,int(volBar)), (85,barY1), (0,0,255), cv2.FILLED)
     cv2.putText(img, f'{int(volPer)} %',(40,450),cv2.FONT_HERSHEY_COMPLEX,
-        1 , (0,0,255), 3)
+        1 , (0,0,255), 2)
     # show the text on the img
     currTime = time.time()
     fps = 1 / (currTime - preTime)
     preTime = currTime
     cv2.putText(img, f'FPS:{int(fps)}',(40,50),cv2.FONT_HERSHEY_COMPLEX,
-        1 , (0,0,255), 3)
+        1 , (0,0,255), 2)
 
     cv2.imshow("Img", img)
     key = cv2.waitKey(1) # set 1ms delay
