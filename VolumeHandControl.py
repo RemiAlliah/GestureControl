@@ -35,7 +35,8 @@ print("press 'q' to quit")
 while True:
     success, img = cap.read()
     img = detector.findHands(img) # detect 21 key point of each hand
-    landMarkList = detector.findPosition(img, draw = False)
+    detector.draw_position = False
+    landMarkList = detector.findPosition(img)
     
     # we only need landmark of number 4 and 8(4 for thumb, 8 for index_finger_tip)
     if len(landMarkList) != 0:
