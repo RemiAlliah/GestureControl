@@ -14,7 +14,7 @@ volume = cast(interface, POINTER(IAudioEndpointVolume))
 volRange = volume.GetVolumeRange()
 
 # using hand detector
-detector = htm.handDetector(detectionCon=0.7)
+detector = htm.handDetector(detectConf=0.7)
 
 # params
 preTime = 0
