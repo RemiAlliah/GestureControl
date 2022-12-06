@@ -17,18 +17,18 @@ volRange = volume.GetVolumeRange()
 detector = htm.handDetector(detectionCon=0.7)
 
 # params
-widthCam, heightCam = 640, 480
 preTime = 0
 minVol = volRange[0]
 maxVol = volRange[1]
+width, height = 640, 480
 vol = 0
 barY1, barY2 = 400, 150
 volBar = barY1
 volPer = 0
 
 cap = cv2.VideoCapture(0)
-cap.set(3, widthCam)
-cap.set(4, heightCam)
+cap.set(3, width)
+cap.set(4, height)
 
 print("press 'q' to quit")
 
