@@ -13,3 +13,6 @@ pip install -r requirements.txt
 ```shell
 python VolumeHandControl.py
 ```
+
+## Terminate the Project
+press 'q' to stop the project running
