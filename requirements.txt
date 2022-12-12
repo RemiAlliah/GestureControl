@@ -1,6 +1,5 @@
-numpy
-math
-time
-pycaw
-mediapipe==0.8.9.1
 opencv-python
+mediapipe==0.8.8
+pycaw
+numpy
+

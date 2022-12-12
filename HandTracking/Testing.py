@@ -1,4 +1,4 @@
-import HandTracking.HandTrackingModule as htm
+import HandTrackingModule as htm
 import cv2
 import mediapipe as mp
 import time
@@ -6,11 +6,13 @@ import time
 pTime = 0
 cTime = 0
 cap = cv2.VideoCapture(0)
-detector = htm.handDetector()
+tracker = htm.handTracker()
+tracker.draw_hand = True
+tracker.draw_position = True
 while True:
     isSuccess, img = cap.read()
-    img  = detector.findHands(img/scratch/lh3317/data/eye/raw)
-    lmList = detector.findPosition(img, draw=False)
+    img  = tracker.detectHands(img)
+    lmList = tracker.detectPosition(img)
     if len(lmList) != 0:
         print(lmList[4])
     cTime = time.time()

@@ -2,22 +2,23 @@ import cv2
 import mediapipe as mp
 import time
 
-class handDetector():
+class handTracker():
     
-    def __init__(self, mode=False, maxNumHands=2, detectConf=0.6, trackConf=0.6, draw_hand=True, draw_position=True):
+    def __init__(self, mode=False, draw_hand=True, draw_position=True, numHands=2, detectLimit=0.6, trackLimit=0.6):
         self.mode = mode
-        self.maxNumHands = maxNumHands
-        self.trackConf = trackConf
-        self.detectConf = detectConf
         self.draw_hand = draw_hand
         self.draw_position = draw_position
+        self.numHands = numHands
+        self.detectLimit = detectLimit
+        self.trackLimit = trackLimit
+        
 
         # Initialize mediapipe to detect hands
         self.mp_hands = mp.solutions.hands
-        self.hands = self.mp_hands.Hands(self.mode, self.maxNumHands, self.detectConf, self.trackConf)
+        self.hands = self.mp_hands.Hands(self.mode, self.numHands, self.detectLimit, self.trackLimit)
         self.mp_draw = mp.solutions.drawing_utils
 
-    def findHands(self, image):
+    def detectHands(self, image):
 
         image_RGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # convert the image from BGR 2 RGB because RGB is suitble for mediapipe
         self.hand_results = self.hands.process(image_RGB)
@@ -28,7 +29,7 @@ class handDetector():
         return image
         
     
-    def findPosition(self, image, handNo=0):
+    def detectPosition(self, image, handNo=0):
         landmarkList = []
 
         if self.hand_results.multi_hand_landmarks:
@@ -48,14 +49,14 @@ def main():
     prev_time = 0
     curr_time = 0
     cap = cv2.VideoCapture(0)
-    detector = handDetector()
+    tracker = handTracker()
     key = None
 
     print("Press 'q' to quit!")
     while key != ord('q'):
         success, image = cap.read()
-        image  = detector.findHands(image)
-        landmarkList = detector.findPosition(image)
+        image  = tracker.detectHands(image)
+        landmarkList = tracker.detectPosition(image)
         if len(landmarkList) != 0:
             print(landmarkList[4])
         curr_time = time.time()
