@@ -34,6 +34,7 @@ print("press 'q' to quit")
 
 while True:
     success, img = cap.read()
+    img = cv2.flip(img,1)
     img = tracker.detectHands(img) # detect 21 key point of each hand
     tracker.draw_position = False
     landMarkList = tracker.detectPosition(img)
