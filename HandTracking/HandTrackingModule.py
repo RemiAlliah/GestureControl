@@ -23,9 +23,12 @@ class handTracker():
         image_RGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # convert the image from BGR 2 RGB because RGB is suitble for mediapipe
         self.hand_results = self.hands.process(image_RGB)
 
-        if self.hand_results.multi_hand_landmarks and self.draw_hand:
-            for landmark in self.hand_results.multi_hand_landmarks:
-                self.mp_draw.draw_landmarks(image, landmark, self.mp_hands.HAND_CONNECTIONS) # Draw the landmark on the hand and connect them
+        self.hand_landmarks = self.hand_results.multi_hand_landmarks
+        if self.hand_landmarks and self.draw_hand:
+            for i in range(len(self.hand_landmarks)):
+                # Draw the landmark on the hand and connect them
+                self.mp_draw.draw_landmarks(image, self.hand_landmarks[i], self.mp_hands.HAND_CONNECTIONS)
+
         return image
         
     
@@ -41,35 +44,6 @@ class handTracker():
                     # print(i, cent_x, cent_y)
                     landmarkList.append([i,cent_x,cent_y])
                     if self.draw_position:
-                        cv2.circle(image, (cent_x, cent_y), 10, (255,0,0), cv2.FILLED)
+                        cv2.circle(image, (cent_x, cent_y), 8, (120,120,0), cv2.FILLED)
 
         return landmarkList
-
-def main():
-    prev_time = 0
-    curr_time = 0
-    cap = cv2.VideoCapture(0)
-    tracker = handTracker()
-    key = None
-
-    print("Press 'q' to quit!")
-    while key != ord('q'):
-        success, image = cap.read()
-        image  = tracker.detectHands(image)
-        landmarkList = tracker.detectPosition(image)
-        if len(landmarkList) != 0:
-            print(landmarkList[4])
-        curr_time = time.time()
-        fps = 1 / (curr_time - prev_time)
-        prev_time = curr_time
-
-        text = "FPS:" + str(int(fps))
-        cv2.putText(image, text, (10, 60), cv2.FONT_HERSHEY_PLAIN, 2, (255,0,255), 2)
-
-        cv2.imshow("Image", image)
-        key = cv2.waitKey(1)
-    print("Camera is turned off.")
-
-
-if __name__ == "__main__":
-    main()
